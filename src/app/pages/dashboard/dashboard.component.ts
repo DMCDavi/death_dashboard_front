@@ -11,6 +11,8 @@ export class DashboardComponent implements OnInit {
   public ctx;
   public datasets: any = [];
   public data: any;
+  public tableHeader: any = [];
+  public tableData: any = [];
   public myChartData;
   public clicked: boolean = true;
   public clicked1: boolean = false;
@@ -24,9 +26,14 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.doService.getDeathByMonth('2019').subscribe((res) => {
       this.data = res[1]
-      console.log(this.data)
       this.myChartData.data.datasets[0].data = res[1]
       this.myChartData.update()
+    })
+
+    this.doService.getDeathDeclarations('2019', 10, 1).subscribe((res) => {
+      this.tableHeader = Object.keys(res[0]) 
+      this.tableHeader.splice(0, 1)
+      this.tableData = res
     })
     
     var gradientChartOptionsConfigurationWithTooltipBlue: any = {
