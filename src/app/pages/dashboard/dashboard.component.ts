@@ -459,7 +459,7 @@ export class DashboardComponent implements OnInit {
         display: false
       },
       data: {
-        labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+        labels: ['Câncer', 'Tuberculose', 'Obesidade', 'Dengue', 'HIV', 'Pneumonia'],
         datasets: [{
           label: "Countries",
           fill: true,
