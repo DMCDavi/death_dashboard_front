@@ -337,7 +337,7 @@ export class DashboardComponent implements OnInit {
     var data = {
       labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
       datasets: [{
-        label: "Data",
+        label: "Número de óbitos",
         fill: true,
         backgroundColor: gradientStroke,
         borderColor: '#ec250d',
@@ -375,7 +375,7 @@ export class DashboardComponent implements OnInit {
     var data = {
       labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
       datasets: [{
-        label: "My First dataset",
+        label: "Número de óbitos",
         fill: true,
         backgroundColor: gradientStroke,
         borderColor: '#00d6b4',
@@ -421,7 +421,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: chart_labels,
         datasets: [{
-          label: "My First dataset",
+          label: "Número de óbitos",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: '#ec250d',
@@ -461,7 +461,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: ['Câncer', 'Tuberculose', 'Obesidade', 'Dengue', 'HIV', 'Pneumonia'],
         datasets: [{
-          label: "Countries",
+          label: "Número de óbitos",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,
