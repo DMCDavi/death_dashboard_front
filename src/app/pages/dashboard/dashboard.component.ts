@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.doService.getDeathByMonth('2019').subscribe((res) => {
+    this.doService.getDeathByMonth('2019', 'GraficoEixos').subscribe((res) => {
       this.data = res[1]
       this.myChartData.data.datasets[0].data = res[1]
       this.myChartData.update()
@@ -477,9 +477,8 @@ export class DashboardComponent implements OnInit {
 
   }
   public updateOptions(year) {
-    this.doService.getDeathByMonth(year).subscribe((res) => {
+    this.doService.getDeathByMonth(year, 'GraficoEixos').subscribe((res) => {
       this.data = res[1]
-      console.log(this.data)
       this.myChartData.data.datasets[0].data = res[1]
       this.myChartData.update()
     })

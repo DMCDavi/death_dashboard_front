@@ -9,8 +9,8 @@ export class DoService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getDeathByMonth(year){
-    return this.httpClient.get(`http://127.0.0.1:8000/NumDeclaracoesObitoMesais?ano=${year}`);
+  getDeathByMonth(year, tipo_exibicao){
+    return this.httpClient.get(`http://127.0.0.1:8000/NumDeclaracoesObitoMensais?ano=${year}&tipo_exibicao=${tipo_exibicao}`);
   }
 
   getDeathDeclarations(year, limit, page){
