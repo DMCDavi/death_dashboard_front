@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import Chart from 'chart.js';
 import { DoService } from "src/app/services/do.service";
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-dashboard",
@@ -20,10 +22,28 @@ export class DashboardComponent implements OnInit {
   public pizzaLabels: any = [];
   public pizzaData: any = [];
   public myPizzaChartData: any;
+  public monthFilterForm: FormGroup;
 
 
-  constructor(public doService: DoService) {
-    
+  constructor(public doService: DoService, private modalService: NgbModal, private fb: FormBuilder) {
+    this.createForms();
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+
+  createForms(){
+    this.monthFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ]
+    });
+  }
+
+  applyMonthFilters() {
+    this.updateOptions(this.monthFilterForm.value.year)
   }
 
   ngOnInit() {
