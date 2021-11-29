@@ -17,6 +17,9 @@ export class DashboardComponent implements OnInit {
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
+  public pizzaLabels: any = [];
+  public pizzaData: any = [];
+  public myPizzaChartData: any;
 
 
   constructor(public doService: DoService) {
@@ -34,6 +37,12 @@ export class DashboardComponent implements OnInit {
       this.tableHeader = Object.keys(res[0]) 
       this.tableHeader.splice(0, 1)
       this.tableData = res
+    })
+
+    this.doService.getDeathfulestsDiseases('2019', 10, 'GraficoEixos').subscribe((res) => {
+      this.pizzaLabels = res[0];
+      this.pizzaData = res[1];
+      this.updatePizzaOptions();
     })
     
     var gradientChartOptionsConfigurationWithTooltipBlue: any = {
@@ -325,42 +334,6 @@ export class DashboardComponent implements OnInit {
       }
     };
 
-    this.canvas = document.getElementById("chartLineRed");
-    this.ctx = this.canvas.getContext("2d");
-
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
-
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      datasets: [{
-        label: "Número de óbitos",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#ec250d',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#ec250d',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#ec250d',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
-      }]
-    };
-
-    var myChart = new Chart(this.ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipRed
-    });
-
 
     this.canvas = document.getElementById("chartLineGreen");
     this.ctx = this.canvas.getContext("2d");
@@ -475,12 +448,99 @@ export class DashboardComponent implements OnInit {
       options: gradientBarChartConfiguration
     });
 
+    this.createPizzaChart();
   }
+
+createPizzaChart(){
+  this.canvas = document.getElementById("chartPizza");
+  this.ctx = this.canvas.getContext("2d");
+
+  var pizzaChartConfig: any = {
+    maintainAspectRatio: false,
+    responsive: true,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: '#f5f5f5',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          display: false
+        },
+        gridLines: {
+          display: false
+        },
+      }],
+      xAxes: [{
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          display: false,
+        }
+      }]
+    },
+  }
+
+  var pizzaData = {
+    labels: this.pizzaLabels,
+    datasets: [{
+      data: this.pizzaData,
+      backgroundColor: [
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)'
+      ],
+      borderColor: [
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  this.myPizzaChartData = new Chart(this.ctx, {
+    type: 'pie',
+    data: pizzaData,
+    options: pizzaChartConfig
+  });
+}
+
   public updateOptions(year) {
     this.doService.getDeathByMonth(year, 'GraficoEixos').subscribe((res) => {
       this.data = res[1]
       this.myChartData.data.datasets[0].data = res[1]
       this.myChartData.update()
     })
+  }
+
+  public updatePizzaOptions() {
+    this.myPizzaChartData.data.datasets[0].data = this.pizzaData;
+    this.myPizzaChartData.data.labels = this.pizzaLabels;
+    this.myPizzaChartData.update();
   }
 }
