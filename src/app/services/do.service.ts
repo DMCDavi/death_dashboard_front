@@ -24,4 +24,8 @@ export class DoService {
   getDeathByState(year, tipo_exibicao){
     return this.httpClient.get(`http://127.0.0.1:8000/MortesPorEstado?ano=${year}&tipo_exibicao=${tipo_exibicao}`);
   }
+
+  getDeathByColor(year, tipo_exibicao){
+    return this.httpClient.get(`http://127.0.0.1:8000/MortesPorRacaCor?ano=${year}&tipo_exibicao=${tipo_exibicao}`);
+  }
 }

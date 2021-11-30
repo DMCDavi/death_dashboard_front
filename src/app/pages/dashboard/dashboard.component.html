@@ -104,6 +104,38 @@
     </div>
 
   </ng-template>
+  <ng-template #colorFilter let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Por Estado'</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="colorFilterForm" (ngSubmit)="applyColorFilters(); modal.dismiss()">
+        <div class="form-group">
+          <label for="year">Escolha o ano: </label>
+          <br/>
+          <select name="year" id="year" formControlName="year">
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="graph">Escolha o tipo de exibição: </label>
+          <br/>
+          <select name="graph" id="graph" formControlName="graph">
+            <option value="GraficoEixos">Gráfico de eixos</option>
+            <option value="GraficoPizza">Gráfico de pizza</option>
+          </select>
+        </div>
+        <div class="modal-footer row justify-content-center">
+          <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
+        </div>
+      </form>    
+    </div>
+
+  </ng-template>
   <div class=" row">
     <div class=" col-12">
       <div class=" card card-chart">
@@ -124,7 +156,7 @@
           </div>
         </div>
         <div class=" card-body">          
-          <div class=" chart-area" [ngSwitch]="this.monthFilterForm.value.graph">
+          <div class=" chart-area" [ngSwitch]="monthFilterForm.value.graph">
             <canvas *ngSwitchCase="'GraficoPizza'" id="chartMonthPizza"> </canvas>
             <canvas *ngSwitchDefault id="chartLinesMonth"></canvas>
           </div>
@@ -154,7 +186,7 @@
           </div>
         </div>
         <div class=" card-body">
-          <div class=" chart-area" [ngSwitch]="this.diseasesFilterForm.value.graph">
+          <div class=" chart-area" [ngSwitch]="diseasesFilterForm.value.graph">
             <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesDiseases"></canvas>
             <canvas *ngSwitchDefault id="chartDiseasesPizza"> </canvas>
             
@@ -183,7 +215,7 @@
           </div>
         </div>
         <div class=" card-body">          
-          <div class=" chart-area" [ngSwitch]="this.stateFilterForm.value.graph">
+          <div class=" chart-area" [ngSwitch]="stateFilterForm.value.graph">
             <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesState"></canvas>
             <canvas *ngSwitchDefault id="chartStatePizza"> </canvas>
           </div>
@@ -193,13 +225,28 @@
     <div class=" col-lg-4">
       <div class=" card card-chart">
         <div class=" card-header">
-          <h5 class=" card-category">Mortes por COVID-19 em 2021</h5>
-          <h3 class=" card-title">
-            <i class=" tim-icons icon-single-02 text-danger-states"> </i> 180.278
-          </h3>
+          <div class=" row">
+            <div class=" col-sm-6 text-left">
+              <h5 class=" card-category">Quantidade de mortes por estado raça/cor da população</h5>
+              <h3 class=" card-title">
+                Mortes por Raça/Cor
+              </h3>
+            </div>
+            <div class=" col-sm-6">
+              <div
+                class=" btn-group btn-group-toggle float-right"
+                data-toggle="buttons"
+              >
+                <button type="button" class="btn btn-info btn-simple" (click)="open(colorFilter)">Filtros</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class=" card-body">
-          <div class=" chart-area"><canvas id="chartLineGreen"> </canvas></div>
+        <div class=" card-body">          
+          <div class=" chart-area" [ngSwitch]="colorFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesColor"></canvas>
+            <canvas *ngSwitchDefault id="chartColorPizza"> </canvas>
+          </div>
         </div>
       </div>
     </div>
