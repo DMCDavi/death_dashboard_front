@@ -55,6 +55,9 @@ export class DashboardComponent implements OnInit {
       ],
       graph: [
         'GraficoPizza'
+      ],
+      quantity: [
+        "10"
       ]
     });
   }
@@ -75,7 +78,7 @@ export class DashboardComponent implements OnInit {
       }
       chart = this.diseasesPizzaChart;
     }
-    this.doService.getDeathfulestsDiseases(this.diseasesFilterForm.value.year, 10, this.diseasesGraphType).subscribe((res) => {
+    this.doService.getDeathfulestsDiseases(this.diseasesFilterForm.value.year, this.diseasesFilterForm.value.quantity, this.diseasesGraphType).subscribe((res) => {
       this.updateOptions(chart, res[1], res[0]);
     })
   }
@@ -108,8 +111,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.doService.getDeathByMonth('2019', 'GraficoEixos').subscribe((res) => {
-      this.monthLineChart.data.datasets[0].data = res[1]
-      this.monthLineChart.update()
+      this.updateOptions(this.monthLineChart, res[1], res[0])
     })
 
     this.doService.getDeathDeclarations('2019', 10, 1).subscribe((res) => {
@@ -413,8 +415,6 @@ createLineChart(chart_id) {
   gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
   gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
 
-  var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-
   var gradientChartOptionsConfigurationWithTooltipRed: any = {
     maintainAspectRatio: false,
     legend: {
@@ -466,7 +466,6 @@ createLineChart(chart_id) {
   var config = {
     type: 'line',
     data: {
-      labels: chart_labels,
       datasets: [{
         label: "Número de óbitos",
         fill: true,
