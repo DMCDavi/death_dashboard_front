@@ -15,7 +15,8 @@ export class DashboardComponent implements OnInit {
   public data: any;
   public tableHeader: any = [];
   public tableData: any = [];
-  public myChartData;
+  public monthLineChart;
+  public monthPizzaChart;
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
@@ -23,6 +24,8 @@ export class DashboardComponent implements OnInit {
   public pizzaData: any = [];
   public myPizzaChartData: any;
   public monthFilterForm: FormGroup;
+  public monthGraphType: string = 'GraficoEixos';
+  public prevMonthGraphType: string = 'GraficoEixos';
 
 
   constructor(public doService: DoService, private modalService: NgbModal, private fb: FormBuilder) {
@@ -38,19 +41,42 @@ export class DashboardComponent implements OnInit {
     this.monthFilterForm = this.fb.group({
       year: [
         '2019'
+      ],
+      graph: [
+        'GraficoEixos'
       ]
     });
   }
 
   applyMonthFilters() {
-    this.updateOptions(this.monthFilterForm.value.year)
+    this.monthGraphType = this.monthFilterForm.value.graph;
+    let chart;
+    if(this.monthGraphType === 'GraficoEixos'){
+      if (this.prevMonthGraphType !== this.monthGraphType) {
+        this.prevMonthGraphType = 'GraficoEixos';
+        this.monthLineChart = this.createLineChart("chartLinesMonth");
+      }
+      chart = this.monthLineChart
+    }else if(this.monthGraphType === 'GraficoPizza'){
+      if (this.prevMonthGraphType !== this.monthGraphType) {
+        this.prevMonthGraphType = 'GraficoPizza';
+        this.monthPizzaChart = this.createPizzaChart("chartMonthPizza")
+      }
+      chart = this.monthPizzaChart;
+    }
+    this.doService.getDeathByMonth(this.monthFilterForm.value.year, this.monthGraphType).subscribe((res) => {
+      this.updateOptions(chart, res[1]);
+    })
+  }
+
+  ngAfterViewInit(){
+    this.monthLineChart = this.createLineChart("chartLinesMonth")
   }
 
   ngOnInit() {
     this.doService.getDeathByMonth('2019', 'GraficoEixos').subscribe((res) => {
-      this.data = res[1]
-      this.myChartData.data.datasets[0].data = res[1]
-      this.myChartData.update()
+      this.monthLineChart.data.datasets[0].data = res[1]
+      this.monthLineChart.update()
     })
 
     this.doService.getDeathDeclarations('2019', 10, 1).subscribe((res) => {
@@ -151,54 +177,6 @@ export class DashboardComponent implements OnInit {
           gridLines: {
             drawBorder: false,
             color: 'rgba(225,78,202,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }]
-      }
-    };
-
-    var gradientChartOptionsConfigurationWithTooltipRed: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }],
-
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(233,32,16,0.1)',
             zeroLineColor: "transparent",
           },
           ticks: {
@@ -393,86 +371,97 @@ export class DashboardComponent implements OnInit {
 
     });
 
-
-
-    var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    console.log(this.data)
-
-
-
-    this.canvas = document.getElementById("chartBig1");
-    this.ctx = this.canvas.getContext("2d");
-
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
-
-    var config = {
-      type: 'line',
-      data: {
-        labels: chart_labels,
-        datasets: [{
-          label: "Número de óbitos",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: '#ec250d',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: '#ec250d',
-          pointBorderColor: 'rgba(255,255,255,0)',
-          pointHoverBackgroundColor: '#ec250d',
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: this.data,
-        }]
-      },
-      options: gradientChartOptionsConfigurationWithTooltipRed
-    };
-    this.myChartData = new Chart(this.ctx, config);
-
-
-    this.canvas = document.getElementById("CountryChart");
-    this.ctx  = this.canvas.getContext("2d");
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
-
-
-    var myChart = new Chart(this.ctx, {
-      type: 'bar',
-      responsive: true,
-      legend: {
-        display: false
-      },
-      data: {
-        labels: ['Câncer', 'Tuberculose', 'Obesidade', 'Dengue', 'HIV', 'Pneumonia'],
-        datasets: [{
-          label: "Número de óbitos",
-          fill: true,
-          backgroundColor: gradientStroke,
-          hoverBackgroundColor: gradientStroke,
-          borderColor: '#1f8ef1',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
-        }]
-      },
-      options: gradientBarChartConfiguration
-    });
-
-    this.createPizzaChart();
+    this.myPizzaChartData = this.createPizzaChart("chartPizza");
   }
 
-createPizzaChart(){
-  this.canvas = document.getElementById("chartPizza");
+createLineChart(chart_id) {
+  this.canvas = document.getElementById(chart_id);
+  this.ctx = this.canvas.getContext("2d");
+
+  var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
+  gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
+
+  var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+  var gradientChartOptionsConfigurationWithTooltipRed: any = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+
+    tooltips: {
+      backgroundColor: '#f5f5f5',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(29,140,248,0.0)',
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          suggestedMin: 80000,
+          suggestedMax: 120000,
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }],
+
+      xAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(233,32,16,0.1)',
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }]
+    }
+  };
+
+  var config = {
+    type: 'line',
+    data: {
+      labels: chart_labels,
+      datasets: [{
+        label: "Número de óbitos",
+        fill: true,
+        backgroundColor: gradientStroke,
+        borderColor: '#ec250d',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#ec250d',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#ec250d',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+      }]
+    },
+    options: gradientChartOptionsConfigurationWithTooltipRed
+  };
+  return new Chart(this.ctx, config);
+}
+
+createPizzaChart(chart_id){
+  this.canvas = document.getElementById(chart_id);
   this.ctx = this.canvas.getContext("2d");
 
   var pizzaChartConfig: any = {
@@ -543,19 +532,16 @@ createPizzaChart(){
     }]
   };
 
-  this.myPizzaChartData = new Chart(this.ctx, {
+  return new Chart(this.ctx, {
     type: 'pie',
     data: pizzaData,
     options: pizzaChartConfig
   });
 }
 
-  public updateOptions(year) {
-    this.doService.getDeathByMonth(year, 'GraficoEixos').subscribe((res) => {
-      this.data = res[1]
-      this.myChartData.data.datasets[0].data = res[1]
-      this.myChartData.update()
-    })
+  public updateOptions(chart, data) {
+      chart.data.datasets[0].data = data
+      chart.update()
   }
 
   public updatePizzaOptions() {

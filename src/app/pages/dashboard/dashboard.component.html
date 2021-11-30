@@ -17,6 +17,15 @@
             <option value="2020">2020</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="graph">Escolha o tipo de exibição: </label>
+          <br/>
+          <select name="graph" id="graph" formControlName="graph">
+            <option value="GraficoEixos">Gráfico de eixos</option>
+            <option value="GraficoPizza">Gráfico de pizza</option>
+            <option value="Tabela">Tabela</option>
+          </select>
+        </div>
         <div class="modal-footer row justify-content-center">
           <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
         </div>
@@ -43,8 +52,11 @@
             </div>
           </div>
         </div>
-        <div class=" card-body">
-          <div class=" chart-area"><canvas id="chartBig1"> </canvas></div>
+        <div class=" card-body">          
+          <div class=" chart-area" [ngSwitch]="this.monthFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoPizza'" id="chartMonthPizza"> </canvas>
+            <canvas *ngSwitchDefault id="chartLinesMonth"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -76,7 +88,8 @@
           </h3>
         </div>
         <div class=" card-body">
-          <div class=" chart-area"><canvas id="CountryChart"> </canvas></div>
+          <div class=" chart-area">
+          </div>
         </div>
       </div>
     </div>
