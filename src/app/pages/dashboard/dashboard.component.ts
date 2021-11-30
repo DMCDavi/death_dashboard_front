@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
       chart = this.statePizzaChart;
     }
     this.doService.getDeathByState(this.stateFilterForm.value.year, this.stateGraphType).subscribe((res) => {
-      this.updateOptions(chart, res[1], res[0]);
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
 
@@ -113,7 +113,7 @@ export class DashboardComponent implements OnInit {
       chart = this.diseasesPizzaChart;
     }
     this.doService.getDeathfulestsDiseases(this.diseasesFilterForm.value.year, this.diseasesFilterForm.value.quantity, this.diseasesGraphType).subscribe((res) => {
-      this.updateOptions(chart, res[1], res[0]);
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
 
@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
       chart = this.monthPizzaChart;
     }
     this.doService.getDeathByMonth(this.monthFilterForm.value.year, this.monthGraphType).subscribe((res) => {
-      this.updateOptions(chart, res[1], res[0]);
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
 
@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.doService.getDeathByMonth('2019', 'GraficoEixos').subscribe((res) => {
-      this.updateOptions(this.monthLineChart, res[1], res[0])
+      this.updateOptions(this.monthLineChart, res["y"] || res[1], res["x"] || res[0])
     })
 
     this.doService.getDeathDeclarations('2019', 10, 1).subscribe((res) => {
@@ -155,12 +155,12 @@ export class DashboardComponent implements OnInit {
       this.tableData = res
     })
 
-    this.doService.getDeathfulestsDiseases('2019', 10, 'GraficoEixos').subscribe((res) => {
-      this.updateOptions(this.diseasesPizzaChart, res[1], res[0])
+    this.doService.getDeathfulestsDiseases('2019', 10, 'GraficoPizza').subscribe((res) => {
+      this.updateOptions(this.diseasesPizzaChart, res["y"] || res[1], res["x"] || res[0])
     })
     
-    this.doService.getDeathByState('2019', 'GraficoEixos').subscribe((res) => {
-      this.updateOptions(this.statePizzaChart, res[1], res[0])
+    this.doService.getDeathByState('2019', 'GraficoPizza').subscribe((res) => {
+      this.updateOptions(this.statePizzaChart, res["y"] || res[1], res["x"] || res[0])
     })
     
     
