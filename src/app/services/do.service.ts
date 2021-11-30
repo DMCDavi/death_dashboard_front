@@ -20,4 +20,8 @@ export class DoService {
   getDeathfulestsDiseases(year, quantity, tipo_exibicao){
     return this.httpClient.get(`http://127.0.0.1:8000/DoencasQueMaisMataram?ano=${year}&quantidade=${quantity}&tipo_exibicao=${tipo_exibicao}`);
   }
+
+  getDeathByState(year, tipo_exibicao){
+    return this.httpClient.get(`http://127.0.0.1:8000/MortesPorEstado?ano=${year}&tipo_exibicao=${tipo_exibicao}`);
+  }
 }

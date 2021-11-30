@@ -19,16 +19,21 @@ export class DashboardComponent implements OnInit {
   public monthPizzaChart;
   public diseasesLineChart;
   public diseasesPizzaChart;
+  public stateLineChart;
+  public statePizzaChart;
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
   public myPizzaChartData: any;
   public monthFilterForm: FormGroup;
   public diseasesFilterForm: FormGroup;
+  public stateFilterForm: FormGroup;
   public monthGraphType: string = 'GraficoEixos';
   public prevMonthGraphType: string = 'GraficoEixos';
   public diseasesGraphType: string = 'GraficoPizza';
-  public prevMonthDiseasesType: string = 'GraficoPizza';
+  public prevDiseasesGraphType: string = 'GraficoPizza';
+  public stateGraphType: string = 'GraficoPizza';
+  public prevStateGraphType: string = 'GraficoPizza';
 
 
   constructor(public doService: DoService, private modalService: NgbModal, private fb: FormBuilder) {
@@ -60,20 +65,49 @@ export class DashboardComponent implements OnInit {
         "10"
       ]
     });
+    this.stateFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ],
+      graph: [
+        'GraficoPizza'
+      ]
+    });
+  }
+
+  applyStateFilters(){
+    this.stateGraphType = this.stateFilterForm.value.graph;
+    let chart;
+    if(this.stateGraphType === 'GraficoEixos'){
+      if (this.prevStateGraphType !== this.stateGraphType) {
+        this.prevStateGraphType = 'GraficoEixos';
+        this.stateLineChart = this.createLineChart("chartLinesState");
+      }
+      chart = this.stateLineChart
+    }else if(this.stateGraphType === 'GraficoPizza'){
+      if (this.prevStateGraphType !== this.stateGraphType) {
+        this.prevStateGraphType = 'GraficoPizza';
+        this.statePizzaChart = this.createPizzaChart("chartStatePizza")
+      }
+      chart = this.statePizzaChart;
+    }
+    this.doService.getDeathByState(this.stateFilterForm.value.year, this.stateGraphType).subscribe((res) => {
+      this.updateOptions(chart, res[1], res[0]);
+    })
   }
 
   applyDiseasesFilters(){
     this.diseasesGraphType = this.diseasesFilterForm.value.graph;
     let chart;
     if(this.diseasesGraphType === 'GraficoEixos'){
-      if (this.prevMonthDiseasesType !== this.diseasesGraphType) {
-        this.prevMonthDiseasesType = 'GraficoEixos';
+      if (this.prevDiseasesGraphType !== this.diseasesGraphType) {
+        this.prevDiseasesGraphType = 'GraficoEixos';
         this.diseasesLineChart = this.createLineChart("chartLinesDiseases");
       }
       chart = this.diseasesLineChart
     }else if(this.diseasesGraphType === 'GraficoPizza'){
-      if (this.prevMonthDiseasesType !== this.diseasesGraphType) {
-        this.prevMonthDiseasesType = 'GraficoPizza';
+      if (this.prevDiseasesGraphType !== this.diseasesGraphType) {
+        this.prevDiseasesGraphType = 'GraficoPizza';
         this.diseasesPizzaChart = this.createPizzaChart("chartDiseasesPizza")
       }
       chart = this.diseasesPizzaChart;
@@ -107,6 +141,7 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit(){
     this.monthLineChart = this.createLineChart("chartLinesMonth")
     this.diseasesPizzaChart = this.createPizzaChart("chartDiseasesPizza");
+    this.statePizzaChart = this.createPizzaChart("chartStatePizza");
   }
 
   ngOnInit() {
@@ -123,6 +158,11 @@ export class DashboardComponent implements OnInit {
     this.doService.getDeathfulestsDiseases('2019', 10, 'GraficoEixos').subscribe((res) => {
       this.updateOptions(this.diseasesPizzaChart, res[1], res[0])
     })
+    
+    this.doService.getDeathByState('2019', 'GraficoEixos').subscribe((res) => {
+      this.updateOptions(this.statePizzaChart, res[1], res[0])
+    })
+    
     
     var gradientChartOptionsConfigurationWithTooltipBlue: any = {
       maintainAspectRatio: false,
