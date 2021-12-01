@@ -1,5 +1,5 @@
 
-<div class=" content">
+<div class=" content" style="padding-top: 0px;">
   <ng-template #monthFilter let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Mensais'</h4>
@@ -63,7 +63,7 @@
               <br/>
               <input
               name="chapter" id="chapter" formControlName="chapter"
-              type="number" class=" form-control"
+              type="number" class=" form-control" style="color:black"
             />
             </div>
           </div>
@@ -109,7 +109,7 @@
               <br/>
               <input
               name="age_inf" id="age_inf" formControlName="age_inf"
-              type="number" class=" form-control"
+              type="number" class=" form-control" style="color:black"
             />
             </div>
           </div>
@@ -119,7 +119,7 @@
               <br/>
               <input
               name="age_sup" id="age_sup" formControlName="age_sup"
-              type="number" class=" form-control"
+              type="number" class=" form-control" style="color:black"
             />
             </div>
           </div>
@@ -153,20 +153,120 @@
     </div>
     <div class="modal-body">
       <form [formGroup]="stateFilterForm" (ngSubmit)="applyStateFilters(); modal.dismiss()">
-        <div class="form-group">
-          <label for="year">Escolha o ano: </label>
-          <br/>
-          <select name="year" id="year" formControlName="year">
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-          </select>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="color">Raça/Cor: </label>
+              <br/>
+              <select name="color" id="color" formControlName="color">
+                <option value="BRANCA">Branca</option>
+                <option value="PARDA">Parda</option>
+                <option value="AMARELA">Amarela</option>
+                <option value="PRETA">Preta</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
         </div>
         <div class="form-group">
-          <label for="graph">Escolha o tipo de exibição: </label>
+          <label for="school">Escolaridade: </label>
           <br/>
-          <select name="graph" id="graph" formControlName="graph">
-            <option value="GraficoEixos">Gráfico de eixos</option>
-            <option value="GraficoPizza">Gráfico de pizza</option>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
           </select>
         </div>
         <div class="modal-footer row justify-content-center">
@@ -185,29 +285,163 @@
     </div>
     <div class="modal-body">
       <form [formGroup]="diseasesFilterForm" (ngSubmit)="applyDiseasesFilters(); modal.dismiss()">
-        <div class="form-group">
-          <label for="year">Escolha o ano: </label>
-          <br/>
-          <select name="year" id="year" formControlName="year">
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-          </select>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="graph">Escolha o tipo de exibição: </label>
-          <br/>
-          <select name="graph" id="graph" formControlName="graph">
-            <option value="GraficoEixos">Gráfico de eixos</option>
-            <option value="GraficoPizza">Gráfico de pizza</option>
-          </select>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="color">Raça/Cor: </label>
+              <br/>
+              <select name="color" id="color" formControlName="color">
+                <option value="BRANCA">Branca</option>
+                <option value="PARDA">Parda</option>
+                <option value="AMARELA">Amarela</option>
+                <option value="PRETA">Preta</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="state">Estado: </label>
+              <br/>
+              <select name="state" id="state" formControlName="state" >
+                <option value="DF">Distrito Federal</option>
+                <option value="TO">Tocantins</option>
+                <option value="SE">Sergipe</option>
+                <option value="SP">São Paulo</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="RR">Roraima</option>
+                <option value="RO">Rondônia</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="PI">Piauí</option>
+                <option value="PR">Paraná</option>
+                <option value="PB">Paraíba</option>
+                <option value="PA">Pará</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MA">Maranhão</option>
+                <option value="GO">Goiás</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="CE">Ceará</option>
+                <option value="BA">Bahia</option>
+                <option value="AM">Amazonas</option>
+                <option value="AP">Amapá</option>
+                <option value="AL">Alagoas</option>
+                <option value="AC">Acre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="quantity">Quantidade de doenças: </label>
           <br/>
           <input
           name="quantity" id="quantity" formControlName="quantity"
-          type="number"
+          type="number" class=" form-control" style="color:black"
         />
+        </div>
+        <div class="form-group">
+          <label for="school">Escolaridade: </label>
+          <br/>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
+          </select>
         </div>
         <div class="modal-footer row justify-content-center">
           <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
@@ -218,27 +452,149 @@
   </ng-template>
   <ng-template #colorFilter let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Por Estado'</h4>
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Por Raça/Cor'</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
       <form [formGroup]="colorFilterForm" (ngSubmit)="applyColorFilters(); modal.dismiss()">
-        <div class="form-group">
-          <label for="year">Escolha o ano: </label>
-          <br/>
-          <select name="year" id="year" formControlName="year">
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-          </select>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="state">Estado: </label>
+              <br/>
+              <select name="state" id="state" formControlName="state" >
+                <option value="DF">Distrito Federal</option>
+                <option value="TO">Tocantins</option>
+                <option value="SE">Sergipe</option>
+                <option value="SP">São Paulo</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="RR">Roraima</option>
+                <option value="RO">Rondônia</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="PI">Piauí</option>
+                <option value="PR">Paraná</option>
+                <option value="PB">Paraíba</option>
+                <option value="PA">Pará</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MA">Maranhão</option>
+                <option value="GO">Goiás</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="CE">Ceará</option>
+                <option value="BA">Bahia</option>
+                <option value="AM">Amazonas</option>
+                <option value="AP">Amapá</option>
+                <option value="AL">Alagoas</option>
+                <option value="AC">Acre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
         </div>
         <div class="form-group">
-          <label for="graph">Escolha o tipo de exibição: </label>
+          <label for="school">Escolaridade: </label>
           <br/>
-          <select name="graph" id="graph" formControlName="graph">
-            <option value="GraficoEixos">Gráfico de eixos</option>
-            <option value="GraficoPizza">Gráfico de pizza</option>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
           </select>
         </div>
         <div class="modal-footer row justify-content-center">
@@ -339,7 +695,7 @@
         <div class=" card-header">
           <div class=" row">
             <div class=" col-sm-6 text-left">
-              <h5 class=" card-category">Quantidade de mortes por estado raça/cor da população</h5>
+              <h5 class=" card-category">Quantidade de mortes por raça/cor da população</h5>
               <h3 class=" card-title">
                 Mortes por Raça/Cor
               </h3>

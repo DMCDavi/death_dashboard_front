@@ -75,7 +75,16 @@ export class DashboardComponent implements OnInit {
       ],
       quantity: [
         "10"
-      ]
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
     });
     this.stateFilterForm = this.fb.group({
       year: [
@@ -83,7 +92,15 @@ export class DashboardComponent implements OnInit {
       ],
       graph: [
         'GraficoPizza'
-      ]
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
     });
     this.colorFilterForm = this.fb.group({
       year: [
@@ -91,12 +108,21 @@ export class DashboardComponent implements OnInit {
       ],
       graph: [
         'GraficoPizza'
-      ]
+      ],
+      sex: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
     });
   }
 
   applyColorFilters(){
-    this.colorGraphType = this.colorFilterForm.value.graph;
+    const formValue = this.colorFilterForm.value
+    this.colorGraphType = formValue.graph;
     let chart;
     if(this.colorGraphType === 'GraficoEixos'){
       if (this.prevColorGraphType !== this.colorGraphType) {
@@ -111,13 +137,14 @@ export class DashboardComponent implements OnInit {
       }
       chart = this.colorPizzaChart;
     }
-    this.doService.getDeathByColor(this.colorFilterForm.value.year, this.colorGraphType).subscribe((res) => {
+    this.doService.getDeathByColor(formValue.year, this.colorGraphType, formValue.sex, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
       this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
 
   applyStateFilters(){
-    this.stateGraphType = this.stateFilterForm.value.graph;
+    const formValue = this.stateFilterForm.value
+    this.stateGraphType = formValue.graph;
     let chart;
     if(this.stateGraphType === 'GraficoEixos'){
       if (this.prevStateGraphType !== this.stateGraphType) {
@@ -132,13 +159,14 @@ export class DashboardComponent implements OnInit {
       }
       chart = this.statePizzaChart;
     }
-    this.doService.getDeathByState(this.stateFilterForm.value.year, this.stateGraphType).subscribe((res) => {
+    this.doService.getDeathByState(formValue.year, this.stateGraphType, formValue.sex, formValue.color, formValue.school, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
       this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
 
   applyDiseasesFilters(){
-    this.diseasesGraphType = this.diseasesFilterForm.value.graph;
+    const formValue = this.diseasesFilterForm.value
+    this.diseasesGraphType = formValue.graph;
     let chart;
     if(this.diseasesGraphType === 'GraficoEixos'){
       if (this.prevDiseasesGraphType !== this.diseasesGraphType) {
@@ -153,7 +181,7 @@ export class DashboardComponent implements OnInit {
       }
       chart = this.diseasesPizzaChart;
     }
-    this.doService.getDeathfulestsDiseases(this.diseasesFilterForm.value.year, this.diseasesFilterForm.value.quantity, this.diseasesGraphType).subscribe((res) => {
+    this.doService.getDeathfulestsDiseases(formValue.year, formValue.quantity, this.diseasesGraphType, formValue.sex, formValue.color, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
       this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
@@ -344,9 +372,49 @@ createPizzaChart(chart_id){
         'rgba(0, 255, 0, 0.2)',
         'rgba(255, 159, 64, 0.2)',
         'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
         'rgba(35, 255, 212, 0.2)'
       ],
       borderColor: [
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
         'rgba(0, 255, 0, 1)',
         'rgba(255, 159, 64, 1)',
         'rgba(47, 159, 255, 1)',
