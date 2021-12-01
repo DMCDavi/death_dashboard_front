@@ -57,7 +57,14 @@ export class DashboardComponent implements OnInit {
       ],
       graph: [
         'GraficoEixos'
-      ]
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: []
     });
     this.diseasesFilterForm = this.fb.group({
       year: [
@@ -152,7 +159,8 @@ export class DashboardComponent implements OnInit {
   }
 
   applyMonthFilters() {
-    this.monthGraphType = this.monthFilterForm.value.graph;
+    const formValue = this.monthFilterForm.value
+    this.monthGraphType = formValue.graph;
     let chart;
     if(this.monthGraphType === 'GraficoEixos'){
       if (this.prevMonthGraphType !== this.monthGraphType) {
@@ -167,7 +175,7 @@ export class DashboardComponent implements OnInit {
       }
       chart = this.monthPizzaChart;
     }
-    this.doService.getDeathByMonth(this.monthFilterForm.value.year, this.monthGraphType).subscribe((res) => {
+    this.doService.getDeathByMonth(formValue.year, this.monthGraphType, formValue.sex, formValue.color, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup).subscribe((res) => {
       this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
     })
   }
@@ -239,8 +247,6 @@ createLineChart(chart_id) {
           zeroLineColor: "transparent",
         },
         ticks: {
-          suggestedMin: 80000,
-          suggestedMax: 120000,
           padding: 20,
           fontColor: "#9a9a9a"
         }
