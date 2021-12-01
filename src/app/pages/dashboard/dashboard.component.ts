@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import Chart from 'chart.js';
+import { DoService } from "src/app/services/do.service";
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-dashboard",
@@ -8,318 +11,295 @@ import Chart from 'chart.js';
 export class DashboardComponent implements OnInit {
   public canvas : any;
   public ctx;
-  public datasets: any;
+  public datasets: any = [];
   public data: any;
-  public myChartData;
+  public tableHeader: any = [];
+  public tableData: any = [];
+  public monthLineChart;
+  public monthPizzaChart;
+  public diseasesLineChart;
+  public diseasesPizzaChart;
+  public stateLineChart;
+  public statePizzaChart;
+  public colorLineChart;
+  public colorPizzaChart;
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
+  public myPizzaChartData: any;
+  public monthFilterForm: FormGroup;
+  public diseasesFilterForm: FormGroup;
+  public stateFilterForm: FormGroup;
+  public colorFilterForm: FormGroup;
+  public monthGraphType: string = 'GraficoEixos';
+  public prevMonthGraphType: string = 'GraficoEixos';
+  public diseasesGraphType: string = 'GraficoPizza';
+  public prevDiseasesGraphType: string = 'GraficoPizza';
+  public stateGraphType: string = 'GraficoPizza';
+  public prevStateGraphType: string = 'GraficoPizza';
+  public colorGraphType: string = 'GraficoPizza';
+  public prevColorGraphType: string = 'GraficoPizza';
 
-  constructor() {}
+
+  constructor(public doService: DoService, private modalService: NgbModal, private fb: FormBuilder) {
+    this.createForms();
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+
+  createForms(){
+    this.monthFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ],
+      graph: [
+        'GraficoEixos'
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: []
+    });
+    this.diseasesFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ],
+      graph: [
+        'GraficoPizza'
+      ],
+      quantity: [
+        "10"
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
+    });
+    this.stateFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ],
+      graph: [
+        'GraficoPizza'
+      ],
+      sex: [],
+      color: [],
+      school: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
+    });
+    this.colorFilterForm = this.fb.group({
+      year: [
+        '2019'
+      ],
+      graph: [
+        'GraficoPizza'
+      ],
+      sex: [],
+      school: [],
+      state: [],
+      chapter: [],
+      age_inf: [],
+      age_sup: [],
+      month_inf: [],
+      month_sup: []
+    });
+  }
+
+  applyColorFilters(){
+    const formValue = this.colorFilterForm.value
+    this.colorGraphType = formValue.graph;
+    let chart;
+    if(this.colorGraphType === 'GraficoEixos'){
+      if (this.prevColorGraphType !== this.colorGraphType) {
+        this.prevColorGraphType = 'GraficoEixos';
+        this.colorLineChart = this.createLineChart("chartLinesColor");
+      }
+      chart = this.colorLineChart
+    }else if(this.colorGraphType === 'GraficoPizza'){
+      if (this.prevColorGraphType !== this.colorGraphType) {
+        this.prevColorGraphType = 'GraficoPizza';
+        this.colorPizzaChart = this.createPizzaChart("chartColorPizza")
+      }
+      chart = this.colorPizzaChart;
+    }
+    this.doService.getDeathByColor(formValue.year, this.colorGraphType, formValue.sex, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
+    })
+  }
+
+  applyStateFilters(){
+    const formValue = this.stateFilterForm.value
+    this.stateGraphType = formValue.graph;
+    let chart;
+    if(this.stateGraphType === 'GraficoEixos'){
+      if (this.prevStateGraphType !== this.stateGraphType) {
+        this.prevStateGraphType = 'GraficoEixos';
+        this.stateLineChart = this.createLineChart("chartLinesState");
+      }
+      chart = this.stateLineChart
+    }else if(this.stateGraphType === 'GraficoPizza'){
+      if (this.prevStateGraphType !== this.stateGraphType) {
+        this.prevStateGraphType = 'GraficoPizza';
+        this.statePizzaChart = this.createPizzaChart("chartStatePizza")
+      }
+      chart = this.statePizzaChart;
+    }
+    this.doService.getDeathByState(formValue.year, this.stateGraphType, formValue.sex, formValue.color, formValue.school, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
+    })
+  }
+
+  applyDiseasesFilters(){
+    const formValue = this.diseasesFilterForm.value
+    this.diseasesGraphType = formValue.graph;
+    let chart;
+    if(this.diseasesGraphType === 'GraficoEixos'){
+      if (this.prevDiseasesGraphType !== this.diseasesGraphType) {
+        this.prevDiseasesGraphType = 'GraficoEixos';
+        this.diseasesLineChart = this.createLineChart("chartLinesDiseases");
+      }
+      chart = this.diseasesLineChart
+    }else if(this.diseasesGraphType === 'GraficoPizza'){
+      if (this.prevDiseasesGraphType !== this.diseasesGraphType) {
+        this.prevDiseasesGraphType = 'GraficoPizza';
+        this.diseasesPizzaChart = this.createPizzaChart("chartDiseasesPizza")
+      }
+      chart = this.diseasesPizzaChart;
+    }
+    this.doService.getDeathfulestsDiseases(formValue.year, formValue.quantity, this.diseasesGraphType, formValue.sex, formValue.color, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup, formValue.month_inf, formValue.month_sup).subscribe((res) => {
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
+    })
+  }
+
+  applyMonthFilters() {
+    const formValue = this.monthFilterForm.value
+    this.monthGraphType = formValue.graph;
+    let chart;
+    if(this.monthGraphType === 'GraficoEixos'){
+      if (this.prevMonthGraphType !== this.monthGraphType) {
+        this.prevMonthGraphType = 'GraficoEixos';
+        this.monthLineChart = this.createLineChart("chartLinesMonth");
+      }
+      chart = this.monthLineChart
+    }else if(this.monthGraphType === 'GraficoPizza'){
+      if (this.prevMonthGraphType !== this.monthGraphType) {
+        this.prevMonthGraphType = 'GraficoPizza';
+        this.monthPizzaChart = this.createPizzaChart("chartMonthPizza")
+      }
+      chart = this.monthPizzaChart;
+    }
+    this.doService.getDeathByMonth(formValue.year, this.monthGraphType, formValue.sex, formValue.color, formValue.school, formValue.state, formValue.chapter, formValue.age_inf, formValue.age_sup).subscribe((res) => {
+      this.updateOptions(chart, res["y"] || res[1], res["x"] || res[0]);
+    })
+  }
+
+  ngAfterViewInit(){
+    this.monthLineChart = this.createLineChart("chartLinesMonth")
+    this.diseasesPizzaChart = this.createPizzaChart("chartDiseasesPizza");
+    this.statePizzaChart = this.createPizzaChart("chartStatePizza");
+    this.colorPizzaChart = this.createPizzaChart("chartColorPizza");
+  }
 
   ngOnInit() {
-    var gradientChartOptionsConfigurationWithTooltipBlue: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+    this.doService.getDeathByMonth('2019', 'GraficoEixos').subscribe((res) => {
+      this.updateOptions(this.monthLineChart, res["y"] || res[1], res["x"] || res[0])
+    })
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#2380f7"
-          }
-        }],
+    this.doService.getDeathDeclarations('2019', 10, 1).subscribe((res) => {
+      this.tableHeader = Object.keys(res[0]) 
+      this.tableHeader.splice(0, 1)
+      this.tableData = res
+    })
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#2380f7"
-          }
-        }]
-      }
-    };
+    this.doService.getDeathfulestsDiseases('2019', 10, 'GraficoPizza').subscribe((res) => {
+      this.updateOptions(this.diseasesPizzaChart, res["y"] || res[1], res["x"] || res[0])
+    })
+    
+    this.doService.getDeathByState('2019', 'GraficoPizza').subscribe((res) => {
+      this.updateOptions(this.statePizzaChart, res["y"] || res[1], res["x"] || res[0])
+    })
 
-    var gradientChartOptionsConfigurationWithTooltipPurple: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+    this.doService.getDeathByColor('2019', 'GraficoPizza').subscribe((res) => {
+      this.updateOptions(this.colorPizzaChart, res["y"] || res[1], res["x"] || res[0])
+    })
+  }
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }],
+createLineChart(chart_id) {
+  this.canvas = document.getElementById(chart_id);
+  this.ctx = this.canvas.getContext("2d");
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(225,78,202,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }]
-      }
-    };
+  var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
 
-    var gradientChartOptionsConfigurationWithTooltipRed: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+  gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
+  gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }],
+  var gradientChartOptionsConfigurationWithTooltipRed: any = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(233,32,16,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }]
-      }
-    };
+    tooltips: {
+      backgroundColor: '#f5f5f5',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(29,140,248,0.0)',
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }],
 
-    var gradientChartOptionsConfigurationWithTooltipOrange: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+      xAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(233,32,16,0.1)',
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }]
+    }
+  };
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 50,
-            suggestedMax: 110,
-            padding: 20,
-            fontColor: "#ff8a76"
-          }
-        }],
-
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(220,53,69,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#ff8a76"
-          }
-        }]
-      }
-    };
-
-    var gradientChartOptionsConfigurationWithTooltipGreen: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 50,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }],
-
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(0,242,195,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }]
-      }
-    };
-
-
-    var gradientBarChartConfiguration: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 120,
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }],
-
-        xAxes: [{
-
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }]
-      }
-    };
-
-    this.canvas = document.getElementById("chartLineRed");
-    this.ctx = this.canvas.getContext("2d");
-
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
-
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+  var config = {
+    type: 'line',
+    data: {
       datasets: [{
-        label: "Data",
+        label: "Número de óbitos",
         fill: true,
         backgroundColor: gradientStroke,
         borderColor: '#ec250d',
@@ -333,138 +313,135 @@ export class DashboardComponent implements OnInit {
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,
         pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
       }]
-    };
+    },
+    options: gradientChartOptionsConfigurationWithTooltipRed
+  };
+  return new Chart(this.ctx, config);
+}
 
-    var myChart = new Chart(this.ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipRed
-    });
+createPizzaChart(chart_id){
+  this.canvas = document.getElementById(chart_id);
+  this.ctx = this.canvas.getContext("2d");
 
-
-    this.canvas = document.getElementById("chartLineGreen");
-    this.ctx = this.canvas.getContext("2d");
-
-
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(66,134,121,0.15)');
-    gradientStroke.addColorStop(0.4, 'rgba(66,134,121,0.0)'); //green colors
-    gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
-
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-      datasets: [{
-        label: "My First dataset",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#00d6b4',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#00d6b4',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#00d6b4',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [90, 27, 60, 12, 80],
+  var pizzaChartConfig: any = {
+    maintainAspectRatio: false,
+    responsive: true,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: '#f5f5f5',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          display: false
+        },
+        gridLines: {
+          display: false
+        },
+      }],
+      xAxes: [{
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          display: false,
+        }
       }]
-    };
-
-    var myChart = new Chart(this.ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipGreen
-
-    });
-
-
-
-    var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    this.datasets = [
-      [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-      [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-      [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-    ];
-    this.data = this.datasets[0];
-
-
-
-    this.canvas = document.getElementById("chartBig1");
-    this.ctx = this.canvas.getContext("2d");
-
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
-
-    var config = {
-      type: 'line',
-      data: {
-        labels: chart_labels,
-        datasets: [{
-          label: "My First dataset",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: '#ec250d',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: '#ec250d',
-          pointBorderColor: 'rgba(255,255,255,0)',
-          pointHoverBackgroundColor: '#ec250d',
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: this.data,
-        }]
-      },
-      options: gradientChartOptionsConfigurationWithTooltipRed
-    };
-    this.myChartData = new Chart(this.ctx, config);
-
-
-    this.canvas = document.getElementById("CountryChart");
-    this.ctx  = this.canvas.getContext("2d");
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
-
-
-    var myChart = new Chart(this.ctx, {
-      type: 'bar',
-      responsive: true,
-      legend: {
-        display: false
-      },
-      data: {
-        labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
-        datasets: [{
-          label: "Countries",
-          fill: true,
-          backgroundColor: gradientStroke,
-          hoverBackgroundColor: gradientStroke,
-          borderColor: '#1f8ef1',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
-        }]
-      },
-      options: gradientBarChartConfiguration
-    });
-
+    },
   }
-  public updateOptions() {
-    this.myChartData.data.datasets[0].data = this.data;
-    this.myChartData.update();
+
+  var pizzaData = {
+    datasets: [{
+      backgroundColor: [
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 63, 41, 0.2)',
+        'rgba(0, 255, 0, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(47, 159, 255, 0.2)',
+        'rgba(35, 255, 212, 0.2)'
+      ],
+      borderColor: [
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 63, 41, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(47, 159, 255, 1)',
+        'rgba(35, 255, 212, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  return new Chart(this.ctx, {
+    type: 'pie',
+    data: pizzaData,
+    options: pizzaChartConfig
+  });
+}
+
+  public updateOptions(chart, data, labels = null) {
+      chart.data.datasets[0].data = data
+      if(labels){
+        chart.data.labels = labels;
+      }
+      chart.update()
   }
 }

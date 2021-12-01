@@ -1,378 +1,741 @@
 
-<div class=" content">
+<div class=" content" style="padding-top: 0px;">
+  <ng-template #monthFilter let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Mensais'</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="monthFilterForm" (ngSubmit)="applyMonthFilters(); modal.dismiss()">
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="color">Raça/Cor: </label>
+              <br/>
+              <select name="color" id="color" formControlName="color">
+                <option value="BRANCA">Branca</option>
+                <option value="PARDA">Parda</option>
+                <option value="AMARELA">Amarela</option>
+                <option value="PRETA">Preta</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="state">Estado: </label>
+              <br/>
+              <select name="state" id="state" formControlName="state" >
+                <option value="DF">Distrito Federal</option>
+                <option value="TO">Tocantins</option>
+                <option value="SE">Sergipe</option>
+                <option value="SP">São Paulo</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="RR">Roraima</option>
+                <option value="RO">Rondônia</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="PI">Piauí</option>
+                <option value="PR">Paraná</option>
+                <option value="PB">Paraíba</option>
+                <option value="PA">Pará</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MA">Maranhão</option>
+                <option value="GO">Goiás</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="CE">Ceará</option>
+                <option value="BA">Bahia</option>
+                <option value="AM">Amazonas</option>
+                <option value="AP">Amapá</option>
+                <option value="AL">Alagoas</option>
+                <option value="AC">Acre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="school">Escolaridade: </label>
+          <br/>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
+          </select>
+        </div>
+        <div class="modal-footer row justify-content-center">
+          <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
+        </div>
+      </form>    
+    </div>
+
+  </ng-template>
+  <ng-template #stateFilter let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Por Estado'</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="stateFilterForm" (ngSubmit)="applyStateFilters(); modal.dismiss()">
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="color">Raça/Cor: </label>
+              <br/>
+              <select name="color" id="color" formControlName="color">
+                <option value="BRANCA">Branca</option>
+                <option value="PARDA">Parda</option>
+                <option value="AMARELA">Amarela</option>
+                <option value="PRETA">Preta</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="school">Escolaridade: </label>
+          <br/>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
+          </select>
+        </div>
+        <div class="modal-footer row justify-content-center">
+          <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
+        </div>
+      </form>    
+    </div>
+
+  </ng-template>
+  <ng-template #diseasesFilter let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes por Doenças'</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="diseasesFilterForm" (ngSubmit)="applyDiseasesFilters(); modal.dismiss()">
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="color">Raça/Cor: </label>
+              <br/>
+              <select name="color" id="color" formControlName="color">
+                <option value="BRANCA">Branca</option>
+                <option value="PARDA">Parda</option>
+                <option value="AMARELA">Amarela</option>
+                <option value="PRETA">Preta</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="state">Estado: </label>
+              <br/>
+              <select name="state" id="state" formControlName="state" >
+                <option value="DF">Distrito Federal</option>
+                <option value="TO">Tocantins</option>
+                <option value="SE">Sergipe</option>
+                <option value="SP">São Paulo</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="RR">Roraima</option>
+                <option value="RO">Rondônia</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="PI">Piauí</option>
+                <option value="PR">Paraná</option>
+                <option value="PB">Paraíba</option>
+                <option value="PA">Pará</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MA">Maranhão</option>
+                <option value="GO">Goiás</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="CE">Ceará</option>
+                <option value="BA">Bahia</option>
+                <option value="AM">Amazonas</option>
+                <option value="AP">Amapá</option>
+                <option value="AL">Alagoas</option>
+                <option value="AC">Acre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantidade de doenças: </label>
+          <br/>
+          <input
+          name="quantity" id="quantity" formControlName="quantity"
+          type="number" class=" form-control" style="color:black"
+        />
+        </div>
+        <div class="form-group">
+          <label for="school">Escolaridade: </label>
+          <br/>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
+          </select>
+        </div>
+        <div class="modal-footer row justify-content-center">
+          <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
+        </div>
+      </form>    
+    </div>
+
+  </ng-template>
+  <ng-template #colorFilter let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Filtro de 'Mortes Por Raça/Cor'</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="colorFilterForm" (ngSubmit)="applyColorFilters(); modal.dismiss()">
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="year">Escolha o ano: </label>
+              <br/>
+              <select name="year" id="year" formControlName="year">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="graph">Escolha o tipo de exibição: </label>
+              <br/>
+              <select name="graph" id="graph" formControlName="graph">
+                <option value="GraficoEixos">Gráfico de eixos</option>
+                <option value="GraficoPizza">Gráfico de pizza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="sex">Sexo: </label>
+              <br/>
+              <select name="sex" id="sex" formControlName="sex">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="I">Indefinido</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="chapter">Capítulo das doenças: </label>
+              <br/>
+              <input
+              name="chapter" id="chapter" formControlName="chapter"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="state">Estado: </label>
+              <br/>
+              <select name="state" id="state" formControlName="state" >
+                <option value="DF">Distrito Federal</option>
+                <option value="TO">Tocantins</option>
+                <option value="SE">Sergipe</option>
+                <option value="SP">São Paulo</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="RR">Roraima</option>
+                <option value="RO">Rondônia</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="PI">Piauí</option>
+                <option value="PR">Paraná</option>
+                <option value="PB">Paraíba</option>
+                <option value="PA">Pará</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MA">Maranhão</option>
+                <option value="GO">Goiás</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="CE">Ceará</option>
+                <option value="BA">Bahia</option>
+                <option value="AM">Amazonas</option>
+                <option value="AP">Amapá</option>
+                <option value="AL">Alagoas</option>
+                <option value="AC">Acre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="age_inf">Idade inferior: </label>
+              <br/>
+              <input
+              name="age_inf" id="age_inf" formControlName="age_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="age_sup">Idade superior: </label>
+              <br/>
+              <input
+              name="age_sup" id="age_sup" formControlName="age_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class=" row">
+          <div class=" col-sm-6">
+            <div class="form-group">
+              <label for="month_inf">Mês óbito inferior: </label>
+              <br/>
+              <input
+              name="month_inf" id="month_inf" formControlName="month_inf"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+          <div class=" col-sm-6 ">
+            <div class="form-group">
+              <label for="month_sup">Mês óbito superior: </label>
+              <br/>
+              <input
+              name="month_sup" id="month_sup" formControlName="month_sup"
+              type="number" class=" form-control" style="color:black"
+            />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="school">Escolaridade: </label>
+          <br/>
+          <select name="school" id="school" formControlName="school">
+            <option value="SEM">Sem escolaridade</option>
+            <option value="I">Indefinida</option>
+            <option value="EF_I">Ensino fundamental 1 completo</option>
+            <option value="EF_II">Ensino fundamental 2 completo</option>
+            <option value="EM">Ensino médio completo</option>
+            <option value="SUPERIOR_I">Ensino superior incompleto</option>
+            <option value="SUPERIOR_C">Ensino superior completo</option>
+          </select>
+        </div>
+        <div class="modal-footer row justify-content-center">
+          <button type="submit" class="btn btn-info btn-simple">Aplicar filtros</button>
+        </div>
+      </form>    
+    </div>
+
+  </ng-template>
   <div class=" row">
     <div class=" col-12">
       <div class=" card card-chart">
         <div class=" card-header">
           <div class=" row">
             <div class=" col-sm-6 text-left">
-              <h5 class=" card-category">Total Shipments</h5>
-              <h2 class=" card-title">Performance</h2>
+              <h5 class=" card-category">declarações de óbito</h5>
+              <h2 class=" card-title">Mortes Mensais</h2>
             </div>
             <div class=" col-sm-6">
               <div
                 class=" btn-group btn-group-toggle float-right"
                 data-toggle="buttons"
               >
-                <label class=" btn btn-sm btn-danger btn-simple" (click)="data=datasets[0];updateOptions();clicked=true;clicked1=false;clicked2=false" [ngClass]="{'active':clicked===true}">
-                  <input checked="checked" name="options" type="radio" />
-
-                  <span
-                    class=" d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                  >
-                    Accounts
-                  </span>
-                  <span class=" d-block d-sm-none">
-                    <i class=" tim-icons icon-single-02"> </i>
-                  </span>
-                </label>
-                <label class=" btn btn-sm btn-danger btn-simple" (click)="data=datasets[1];updateOptions();clicked=false;clicked1=true;clicked2=false" [ngClass]="{'active':clicked1===true}">
-                  <input
-                    class=" d-none d-sm-none"
-                    name="options"
-                    type="radio"
-                  />
-
-                  <span
-                    class=" d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                  >
-                    Purchases
-                  </span>
-                  <span class=" d-block d-sm-none">
-                    <i class=" tim-icons icon-gift-2"> </i>
-                  </span>
-                </label>
-                <label class=" btn btn-sm btn-danger btn-simple" (click)="data=datasets[2];updateOptions();clicked=false;clicked1=false;clicked2=true" [ngClass]="{'active':clicked2===true}">
-                  <input class=" d-none" name="options" type="radio" />
-
-                  <span
-                    class=" d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                  >
-                    Sessions
-                  </span>
-                  <span class=" d-block d-sm-none">
-                    <i class=" tim-icons icon-tap-02"> </i>
-                  </span>
-                </label>
+                <button type="button" class="btn btn-info btn-simple" (click)="open(monthFilter)">Filtros</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" card-body">          
+          <div class=" chart-area" [ngSwitch]="monthFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoPizza'" id="chartMonthPizza"> </canvas>
+            <canvas *ngSwitchDefault id="chartLinesMonth"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=" row">
+    <div class=" col-lg-4">
+      <div class=" card card-chart">
+        <div class=" card-header">
+          <div class=" row">
+            <div class=" col-sm-6 text-left">
+              <h5 class=" card-category">Doenças que mais mataram</h5>
+              <h3 class=" card-title">
+                Mortes por Doenças
+              </h3>
+            </div>
+            <div class=" col-sm-6">
+              <div
+                class=" btn-group btn-group-toggle float-right"
+                data-toggle="buttons"
+              >
+                <button type="button" class="btn btn-info btn-simple" (click)="open(diseasesFilter)">Filtros</button>
               </div>
             </div>
           </div>
         </div>
         <div class=" card-body">
-          <div class=" chart-area"><canvas id="chartBig1"> </canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=" row">
-    <div class=" col-lg-4">
-      <div class=" card card-chart">
-        <div class=" card-header">
-          <h5 class=" card-category">Total Shipments</h5>
-          <h3 class=" card-title">
-            <i class=" tim-icons icon-bell-55 text-danger-states"> </i> 763,215
-          </h3>
-        </div>
-        <div class=" card-body">
-          <div class=" chart-area"><canvas id="chartLineRed"> </canvas></div>
+          <div class=" chart-area" [ngSwitch]="diseasesFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesDiseases"></canvas>
+            <canvas *ngSwitchDefault id="chartDiseasesPizza"> </canvas>
+            
+          </div>
         </div>
       </div>
     </div>
     <div class=" col-lg-4">
       <div class=" card card-chart">
         <div class=" card-header">
-          <h5 class=" card-category">Daily Sales</h5>
-          <h3 class=" card-title">
-            <i class=" tim-icons icon-delivery-fast text-info"> </i> 3,500€
-          </h3>
-        </div>
-        <div class=" card-body">
-          <div class=" chart-area"><canvas id="CountryChart"> </canvas></div>
-        </div>
-      </div>
-    </div>
-    <div class=" col-lg-4">
-      <div class=" card card-chart">
-        <div class=" card-header">
-          <h5 class=" card-category">Completed Tasks</h5>
-          <h3 class=" card-title">
-            <i class=" tim-icons icon-send text-success"> </i> 12,100K
-          </h3>
-        </div>
-        <div class=" card-body">
-          <div class=" chart-area"><canvas id="chartLineGreen"> </canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=" row">
-    <div class=" col-lg-6 col-md-12">
-      <div class=" card card-tasks">
-        <div class=" card-header">
-          <h6 class=" title d-inline">Tasks(5)</h6>
-          <p class=" card-category d-inline">today</p>
-          <div ngbDropdown>
-            <button
-              class=" btn btn-link btn-icon"
-              data-toggle="dropdown"
-              ngbDropdownToggle
-              type="button"
-            >
-              <i class=" tim-icons icon-settings-gear-63"> </i>
-            </button>
-            <div
-              aria-labelledby="dropdownMenuLink"
-              class=" dropdown-menu-right"
-              ngbDropdownMenu
-            >
-              <a href="javascript:void(0)" ngbDropdownItem> Action </a>
-              <a href="javascript:void(0)" ngbDropdownItem> Another action </a>
-              <a href="javascript:void(0)" ngbDropdownItem> Something else </a>
+          <div class=" row">
+            <div class=" col-sm-6 text-left">
+              <h5 class=" card-category">Quantidade de mortes por estado brasileiro</h5>
+              <h3 class=" card-title">
+                Mortes por estado
+              </h3>
+            </div>
+            <div class=" col-sm-6">
+              <div
+                class=" btn-group btn-group-toggle float-right"
+                data-toggle="buttons"
+              >
+                <button type="button" class="btn btn-info btn-simple" (click)="open(stateFilter)">Filtros</button>
+              </div>
             </div>
           </div>
         </div>
-        <div class=" card-body">
-          <div class=" table-full-width table-responsive">
-            <table class=" table">
-              <tbody>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">Update the Documentation</p>
-                    <p class=" text-muted">
-                      Dwuamish Head, Seattle, WA 8:47 AM
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body" >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          checked=""
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">GDPR Compliance</p>
-                    <p class=" text-muted">
-                      The GDPR is a regulation that requires businesses to
-                      protect the personal data and privacy of Europe citizens
-                      for transactions that occur within EU member states.
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body" >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">Solve the issues</p>
-                    <p class=" text-muted">
-                      Fifty percent of all respondents said they would be more
-                      likely to shop at a company
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body" >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">Release v2.0.0</p>
-                    <p class=" text-muted">
-                      Ra Ave SW, Seattle, WA 98116, SUA 11:19 AM
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body"  >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">Export the processed files</p>
-                    <p class=" text-muted">
-                      The report also shows that consumers will not easily
-                      forgive a company once a breach exposing their personal
-                      data occurs.
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body" >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class=" form-check">
-                      <label class=" form-check-label">
-                        <input
-                          class=" form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-
-                        <span class=" form-check-sign">
-                          <span class=" check"> </span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class=" title">Arival at export process</p>
-                    <p class=" text-muted">
-                      Capitol Hill, Seattle, WA 12:34 AM
-                    </p>
-                  </td>
-                  <td class=" td-actions text-right">
-                    <button class=" btn btn-link" type="button" placement="left" ngbTooltip="Edit Task" container="body" >
-                      <i class=" tim-icons icon-pencil"> </i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <div class=" card-body">          
+          <div class=" chart-area" [ngSwitch]="stateFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesState"></canvas>
+            <canvas *ngSwitchDefault id="chartStatePizza"> </canvas>
           </div>
         </div>
       </div>
     </div>
-    <div class=" col-lg-6 col-md-12">
+    <div class=" col-lg-4">
+      <div class=" card card-chart">
+        <div class=" card-header">
+          <div class=" row">
+            <div class=" col-sm-6 text-left">
+              <h5 class=" card-category">Quantidade de mortes por raça/cor da população</h5>
+              <h3 class=" card-title">
+                Mortes por Raça/Cor
+              </h3>
+            </div>
+            <div class=" col-sm-6">
+              <div
+                class=" btn-group btn-group-toggle float-right"
+                data-toggle="buttons"
+              >
+                <button type="button" class="btn btn-info btn-simple" (click)="open(colorFilter)">Filtros</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" card-body">          
+          <div class=" chart-area" [ngSwitch]="colorFilterForm.value.graph">
+            <canvas *ngSwitchCase="'GraficoEixos'" id="chartLinesColor"></canvas>
+            <canvas *ngSwitchDefault id="chartColorPizza"> </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=" row">
+    <div class=" col-lg-12 col-md-12">
       <div class=" card">
         <div class=" card-header">
-          <h4 class=" card-title">Simple Table</h4>
+          <h4 class=" card-title">10 Declarações de Óbito de 2019</h4>
         </div>
         <div class=" card-body">
           <div class=" table-responsive">
             <table class=" table tablesorter" id="">
               <thead class=" text-primary">
                 <tr>
-                  <th>Name</th>
-                  <th>Country</th>
-                  <th>City</th>
-                  <th class=" text-center">Salary</th>
+                  <th *ngFor="let headerItem of tableHeader">{{headerItem}}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Dakota Rice</td>
-                  <td>Niger</td>
-                  <td>Oud-Turnhout</td>
-                  <td class=" text-center">$36,738</td>
-                </tr>
-                <tr>
-                  <td>Minerva Hooper</td>
-                  <td>CuraÃ§ao</td>
-                  <td>Sinaai-Waas</td>
-                  <td class=" text-center">$23,789</td>
-                </tr>
-                <tr>
-                  <td>Sage Rodriguez</td>
-                  <td>Netherlands</td>
-                  <td>Baileux</td>
-                  <td class=" text-center">$56,142</td>
-                </tr>
-                <tr>
-                  <td>Philip Chaney</td>
-                  <td>Korea, South</td>
-                  <td>Overland Park</td>
-                  <td class=" text-center">$38,735</td>
-                </tr>
-                <tr>
-                  <td>Doris Greene</td>
-                  <td>Malawi</td>
-                  <td>Feldkirchen in KÃ¤rnten</td>
-                  <td class=" text-center">$63,542</td>
-                </tr>
-                <tr>
-                  <td>Mason Porter</td>
-                  <td>Chile</td>
-                  <td>Gloucester</td>
-                  <td class=" text-center">$78,615</td>
-                </tr>
-                <tr>
-                  <td>Jon Porter</td>
-                  <td>Portugal</td>
-                  <td>Gloucester</td>
-                  <td class=" text-center">$98,615</td>
+                <tr *ngFor="let dataItem of tableData">
+                  <td *ngFor="let headerItem of tableHeader">{{dataItem[headerItem]}}</td>
                 </tr>
               </tbody>
             </table>
